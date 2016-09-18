@@ -22,12 +22,14 @@ $(top).on('stonehearthReady', function(cc)
 
       if (!this._addedDailyReqDiv)
       {
-         this._dailyReqDiv = document.createElement("div");
-         this._dailyReqDiv.style["font-size"] = "16px";
+         $tabPage = this.$(".tabPage");
+         if ($tabPage) {
+            this._dailyReqDiv = document.createElement("div");
+            this._dailyReqDiv.style["font-size"] = "16px";
+            $tabPage[0].appendChild(this._dailyReqDiv);
 
-         this.$(".tabPage")[0].appendChild(this._dailyReqDiv);
-
-         this._addedDailyReqDiv = true;
+            this._addedDailyReqDiv = true;
+         }
       }
 
       // Get the current values of food, net worth and morale.
