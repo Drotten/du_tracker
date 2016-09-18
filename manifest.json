@@ -1,0 +1,12 @@
+{
+   "info": {
+      "name": "Daily Update Tracker",
+      "version": 3
+   },
+
+   "ui": {
+      "js": [
+         "file(ui/town/town.js)"
+      ]
+   }
+}
