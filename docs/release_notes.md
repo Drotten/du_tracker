@@ -1,3 +1,8 @@
+### Version 1.0.2
+
+- **Bug fix** - Net worth were not showing the correct values (cause JS eval function don't read ^ as power of).
+
+
 ### Version 1.0.1
 
 - **Bug fix** - Tracker shows itself even if no food is present.
