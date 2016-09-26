@@ -16,10 +16,10 @@ $(top).on('stonehearthReady', function(cc)
    // Get the StonehearthTownView prototype.
    var StonehearthTownViewProto = App.StonehearthTownView.proto();
 
-   StonehearthTownViewProto.du_tracker_old_updateUi = StonehearthTownViewProto._updateUi;
+   StonehearthTownViewProto._du_tracker_old_updateUi = StonehearthTownViewProto._updateUi;
    StonehearthTownViewProto._updateUi = function()
    {
-      this.du_tracker_old_updateUi();
+      this._du_tracker_old_updateUi();
 
       if (!this._dailyReqDiv)
       {
@@ -45,18 +45,21 @@ $(top).on('stonehearthReady', function(cc)
       $.getJSON('/stonehearth/data/gm/campaigns/game_events/arcs/trigger/game_events/encounters/daily_report_encounter.json', function(data) {
          var data = data.script_info.data;
          var growthReqs = data.growth_requirements;
+         var options = {
+            numCitizens: numCitizens,
+         };
 
-         var foodReq = eval(growthReqs.food.replace(/math/g, 'Math').replace(/num_citizens/g, numCitizens));
+         var foodReq = eval(self._du_tracker_toJSEquation(growthReqs.food, options));
          var foodGoal = current.food >= foodReq
             ? current.food.toString().fontcolor("#6bf10d")
             : current.food.toString().fontcolor("#c21b00");
 
-         var moraleReq = eval(growthReqs.morale.replace(/math/g, 'Math').replace(/num_citizens/g, numCitizens));
+         var moraleReq = eval(self._du_tracker_toJSEquation(growthReqs.morale, options));
          var moraleGoal = current.morale >= moraleReq
             ? current.morale.toString().fontcolor("#6bf10d")
             : current.morale.toString().fontcolor("#c21b00");
 
-         var netWorthReq = eval(growthReqs.net_worth.replace(/math/g, 'Math').replace(/num_citizens/g, numCitizens));
+         var netWorthReq = eval(self._du_tracker_toJSEquation(growthReqs.net_worth, options));
          var netWorthGoal = current.net_worth >= netWorthReq
             ? current.net_worth.toString().fontcolor("#6bf10d")
             : current.net_worth.toString().fontcolor("#c21b00");
@@ -74,6 +77,15 @@ $(top).on('stonehearthReady', function(cc)
             netWorthGoal,                 // {8}
             netWorthReq);                 // {9}
       });
+   };
+
+   StonehearthTownViewProto._du_tracker_toJSEquation = function(str, options)
+   {
+      var str2 = str.replace(/num_citizens/g, options.numCitizens);
+      str2 = str2.replace(/math/g, 'Math');
+      str2 = str2.replace(/([0-9]+)\s*\^\s*([0-9]+)/g, 'Math.pow($1, $2)');
+
+      return str2;
    };
 
    // Set StonehearthTownView with its new functions.
