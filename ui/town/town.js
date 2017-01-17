@@ -21,8 +21,7 @@ $(top).on('stonehearthReady', function(cc)
    {
       this._du_tracker_old_updateUi();
 
-      if (!this._dailyReqDiv)
-      {
+      if (!this._dailyReqDiv) {
          $tabPage = this.$(".tabPage");
          if ($tabPage) {
             this._dailyReqDiv = document.createElement("div");
@@ -31,10 +30,9 @@ $(top).on('stonehearthReady', function(cc)
          }
       }
 
-      // Get the current values of food, net worth and morale.
+      // Get the current values of player's food and net worth.
       var current = {
          food: this.get('score_data.total_scores.edibles') || 0,
-         morale: (Math.floor(this.get('score_data.aggregate.happiness'))/10) || 0,
          net_worth: this.get('score_data.total_scores.net_worth') || 0,
       };
 
@@ -54,38 +52,28 @@ $(top).on('stonehearthReady', function(cc)
             ? current.food.toString().fontcolor("#6bf10d")
             : current.food.toString().fontcolor("#c21b00");
 
-         var moraleReq = eval(self._du_tracker_toJSEquation(growthReqs.morale, options));
-         var moraleGoal = current.morale >= moraleReq
-            ? current.morale.toString().fontcolor("#6bf10d")
-            : current.morale.toString().fontcolor("#c21b00");
-
          var netWorthReq = eval(self._du_tracker_toJSEquation(growthReqs.net_worth, options));
          var netWorthGoal = current.net_worth >= netWorthReq
             ? current.net_worth.toString().fontcolor("#6bf10d")
             : current.net_worth.toString().fontcolor("#c21b00");
 
          // Show the values in the town window.
-         self._dailyReqDiv.innerHTML = String.format("{0}: {1}{2}/{3}, {4}{5}/{6}, {7}{8}/{9}",
+         self._dailyReqDiv.innerHTML = String.format("{0}: {1}{2}/{3}, {4}{5}/{6}",
             i18n.t(data.update_title),    // {0}
             i18n.t(data.food_label),      // {1}
             foodGoal,                     // {2}
             foodReq,                      // {3}
-            i18n.t(data.morale_label),    // {4}
-            moraleGoal,                   // {5}
-            moraleReq,                    // {6}
-            i18n.t(data.net_worth_label), // {7}
-            netWorthGoal,                 // {8}
-            netWorthReq);                 // {9}
+            i18n.t(data.net_worth_label), // {4}
+            netWorthGoal,                 // {5}
+            netWorthReq);                 // {6}
       });
    };
 
    StonehearthTownViewProto._du_tracker_toJSEquation = function(str, options)
    {
-      var str2 = str.replace(/num_citizens/g, options.numCitizens);
-      str2 = str2.replace(/math/g, 'Math');
-      str2 = str2.replace(/([0-9]+)\s*\^\s*([0-9]+)/g, 'Math.pow($1, $2)');
-
-      return str2;
+      return str.replace(/num_citizens/g, options.numCitizens)
+                .replace(/math/g, 'Math')
+                .replace(/([0-9]+)\s*\^\s*([0-9]+)/g, 'Math.pow($1, $2)');
    };
 
    // Set StonehearthTownView with its new functions.
