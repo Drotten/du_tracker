@@ -1,3 +1,8 @@
+### Version 1.0.2a
+
+- **Stability** - Updated according to Stonehearth Alpha 20 (which removes morale requirement).
+
+
 ### Version 1.0.2
 
 - **Bug fix** - Net worth were not showing the correct values (cause JS eval function don't read ^ as power of).
